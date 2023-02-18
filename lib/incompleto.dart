@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'dart:math';
-
-import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-
-
+import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
+
+
+
 
 import 'dart:io';
 import 'dart:ui';
@@ -29,16 +29,7 @@ import 'package:geolocator/geolocator.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-
-import 'package:intl/intl.dart';
-import 'package:geocoding/geocoding.dart';
-
-import 'package:dialogflow_flutter/dialogflowFlutter.dart';
-import 'package:dialogflow_flutter/googleAuth.dart';
-import 'package:dialogflow_flutter/language.dart';
-
-import 'package:googleapis/dialogflow/v2.dart';
-
+/*
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeService();
@@ -74,9 +65,6 @@ class _MyAppState extends State<MyApp> {
     initializeTts();
     //aumente para q no tengala necesidad de iniciar buton
     initSpeechState();
-    //dialog
-    initDialogflow();
-  //hasta aqui dialogflow
   }
 
   @override
@@ -130,7 +118,7 @@ class _MyAppState extends State<MyApp> {
   List<LocaleName> _localeNames = [];
   String temp = '';
   final SpeechToText speech = SpeechToText();
-  late DialogFlow dialogflow;
+
 
 
   
@@ -212,54 +200,9 @@ void speechSettings2(){
       _hasSpeech = hasSpeech;
     });
   }
-
-
-
-  //dialog flow 
-
-  Chatbot() {
-    initDialogflow();
-  }
-
-  Future<void> initDialogflow() async {
-  final authGoogle = await AuthGoogle(
-            fileJson: 'assets/agent.json')
-        .build();
-    dialogflow = DialogFlow(authGoogle: authGoogle, language: Language.spanish);
-  }
-
-  Future<void> detectIntent(String text) async {
-    try {
-      final response = await dialogflow.detectIntent(text);
-      final fulfillment = response.queryResult?.fulfillmentMessages?.first;
-      final speech = fulfillment?.simpleResponses?.simpleResponses?.first?.textToSpeech;
-
-      _speak(speech ?? "Lo siento, no entiendo lo que quieres decir.");
-    } catch (e) {
-      print("Ocurrió un error al procesar la solicitud: $e");
-      _speak("Lo siento, ha ocurrido un error al procesar tu solicitud.");
-    }
-  }
-
-  Future<void> queryDialogflow(String text) async {
-    try {
-      final response = await dialogflow.detectIntent(text);
-      final fulfillmentText = response.queryResult?.fulfillmentText;
-
-      // Reproducir la respuesta
-      print(fulfillmentText);
-      await _speak(fulfillmentText!);
-    } catch (e) {
-      print("Ocurrió un error al procesar la solicitud: $e");
-      _speak("Lo siento, ha ocurrido un error al procesar tu solicitud.");
-    }
-  }
-
-//hasta aqui
 @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false, 
       home: Scaffold(
         appBar: AppBar(
           title: const Text('APP DONDE ESTOY'),
@@ -380,11 +323,8 @@ resultListener(SpeechRecognitionResult result) async {
       temp = lastWords.toLowerCase();
    
       print(temp);
-      
-       print('entre pelayo 2');
-        //con speed to text a text to speed
-      //comandos(temp);
-      queryDialogflow(temp);
+      comandos(temp);
+       print('entre pelayo');
     });
   }
   
@@ -392,12 +332,12 @@ resultListener(SpeechRecognitionResult result) async {
 
   comandos(String txt) async {
     switch (txt) {
-      case 'hola ari ':
+      case 'Hola lili ':
         temp = 'Hola Matias';
         _speak(temp);
         
 	    break;
-      case 'hola ari':
+      case 'Hola ':
         temp = 'Hola Pelayo';
         _speak(temp);
         
@@ -424,55 +364,6 @@ resultListener(SpeechRecognitionResult result) async {
         _speak(temp);
  
 	    break; 
-
-      case 'qué día es hoy ':
-      final DateTime now = DateTime.now();
-      final String formattedDate = DateFormat('dd/MM/yyyy HH:mm').format(now);
-      print(formattedDate); // imprime algo como "14/02/2023 15:30"
-        temp = formattedDate;
-        _speak(temp);
- 
-	    break; 
-      case 'qué día es hoy':
-         final DateTime now = DateTime.now();
-      final String formattedDate = DateFormat('dd/MM/yyyy HH:mm').format(now);
-      print(formattedDate); // imprime algo como "14/02/2023 15:30"
-        temp = formattedDate;
-        _speak(temp);
- 
-	    break; 
-
-  case 'mandar mi ubicación ':
-        temp = 'Mandando la ubicación al responsable por whatsapp';
-        _speak(temp);
-     
-         Position position = await Geolocator.getCurrentPosition(
-           desiredAccuracy: LocationAccuracy.high,
-          );
-
-           final double latitude = position.latitude;
-           final double longitude = position.longitude;
-
-           print('Latitude: $latitude, Longitude: $longitude');
-        final url3 = "https://wa.me/59170976802?text=Hola,%20¿Podes%20venir%20por%20mi?%0A%0AEste%20es%20el%20enlace%20de%20Google%20Maps:%20https://www.google.com/maps?q=$latitude,$longitude";
-         await launch(url3);
-      break;
-
-     case 'mandar mi ubicación':
-        temp = 'Mandando la ubicación al responsable por whatsapp';
-        _speak(temp);
-       
-         Position position = await Geolocator.getCurrentPosition(
-           desiredAccuracy: LocationAccuracy.high,
-          );
-
-           final double latitude = position.latitude;
-           final double longitude = position.longitude;
-
-           print('Latitude: $latitude, Longitude: $longitude');
-       final url3 = "https://wa.me/59170976802?text=Hola,%20¿Podes%20venir%20por%20mi?%0A%0AEste%20es%20el%20enlace%20de%20Google%20Maps:%20https://www.google.com/maps?q=$latitude,$longitude";
-         await launch(url3);
-      break;
 
       case 'mandar ubicación ':
         temp = 'Mandando la ubicación al responsable por whatsapp';
@@ -534,70 +425,54 @@ resultListener(SpeechRecognitionResult result) async {
          await launch(url3);
       break;
 
-      case 'mi ubicación actual':
-        
-    
-          /*Position position = await Geolocator.getCurrentPosition(
-           desiredAccuracy: LocationAccuracy.high,
-          );
-
-           double latitude = position.latitude;
-            double longitude = position.longitude;
-
-           print('Latitude: $latitude, Longitude: $longitude');
-            
-        //temp = 'En los módulos universitarios te encuentras en este momento';
-        //_speak(temp);
-      String apiKey = "AIzaSyA58OP0geQlmdzlSdFymUylTKUoDst6HRo";
-      double lat = latitude;
-      double lng = longitude;
-      String url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=AIzaSyA58OP0geQlmdzlSdFymUylTKUoDst6HRo";
-      var response = await http.get(Uri.parse(url));
-      var json = jsonDecode(response.body);
-      String streetAddress = json["results"][0]["formatted_address"];
-      print(streetAddress);
-      print("ese es api2"); */
-       temp = "segun las coordenadas";
-      _speak(temp);
-	    break;
-
-      case 'mi ubicación actual ':
-    
-          /*Position position = await Geolocator.getCurrentPosition(
-           desiredAccuracy: LocationAccuracy.high,
-          );
-
-           double latitude = position.latitude;
-            double longitude = position.longitude;
-
-           print('Latitude: $latitude, Longitude: $longitude');
-            
-        //temp = 'En los módulos universitarios te encuentras en este momento';
-        //_speak(temp);
-      String apiKey = "AIzaSyA58OP0geQlmdzlSdFymUylTKUoDst6HRo";
-      double lat = latitude;
-      double lng = longitude;
-      String url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=AIzaSyA58OP0geQlmdzlSdFymUylTKUoDst6HRo";
-      var response = await http.get(Uri.parse(url));
-      var json = jsonDecode(response.body);
-      String streetAddress = json["results"][0]["formatted_address"];
-      print(streetAddress);
-      print("ese es api2"); */
-       temp = "segun las coordenadas";
-        _speak(temp);
-	    break;
-
-
       case 'dónde estoy':
         
-       
-       temp = 'En los módulos universitarios te encuentras en este momento';
+          Position position = await Geolocator.getCurrentPosition(
+           desiredAccuracy: LocationAccuracy.high,
+          );
+
+           final double latitude = position.latitude;
+           final double longitude = position.longitude;
+
+           print('Latitude: $latitude, Longitude: $longitude');
+            
+        
+
+      String apiKey = "AIzaSyBjumTanlDl4uX5ZwPT_qbB11NoFjRcZCY";
+      double lat = latitude;
+      double lng = longitude;
+      String url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=$apiKey";
+      var response = await http.get(Uri.parse(url));
+      var json = jsonDecode(response.body);
+      String streetAddress = json["results"][0]["formatted_address"];
+      print(streetAddress);
+      print("ese es api");
+       temp = 'En los módulos universitarios te encuentras en este momento $streetAddress';
         _speak(temp);
 	    break;
       case 'dónde estoy ':
       
-         
-       temp = 'En los módulos universitarios te encuentras en este momento';
+          Position position = await Geolocator.getCurrentPosition(
+           desiredAccuracy: LocationAccuracy.high,
+          );
+
+           double latitude = position.latitude;
+            double longitude = position.longitude;
+
+           print('Latitude: $latitude, Longitude: $longitude');
+            
+        //temp = 'En los módulos universitarios te encuentras en este momento';
+        //_speak(temp);
+      String apiKey = "AIzaSyBjumTanlDl4uX5ZwPT_qbB11NoFjRcZCY";
+      double lat = latitude;
+      double lng = longitude;
+      String url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=AIzaSyBjumTanlDl4uX5ZwPT_qbB11NoFjRcZCY";
+      var response = await http.get(Uri.parse(url));
+      var json = jsonDecode(response.body);
+      String streetAddress = json["results"][0]["formatted_address"];
+      print(streetAddress);
+      print("ese es api2");
+       temp = 'En los módulos universitarios te encuentras en este momento $streetAddress';
         _speak(temp);
 	    break;
       case 'dónde estoy?':
@@ -658,8 +533,6 @@ resultListener(SpeechRecognitionResult result) async {
       lastStatus = '$status';
     });
   }
-  
-  FlatButton({required Text child, required onPressed}) {}
 }
 
 
@@ -670,7 +543,8 @@ resultListener(SpeechRecognitionResult result) async {
 //la parte background
 Future<void> initializeService() async {
   final service = FlutterBackgroundService();
-  
+  //agregue del iniciar escuchador 
+  _MyAppState().initSpeechState();
   /// OPTIONAL, using custom notification channel id
   const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'my_foreground', // id
@@ -856,3 +730,4 @@ class _LogViewState extends State<LogView> {
     );
   }
 }
+*/

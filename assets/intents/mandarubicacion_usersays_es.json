@@ -1,0 +1,108 @@
+[
+  {
+    "id": "1927b377-6e93-4051-be16-97b9c07a60e5",
+    "data": [
+      {
+        "text": "mandar ubicacion a resonsable",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "es",
+    "updated": 0
+  },
+  {
+    "id": "30af6b3c-fa94-46af-8f2c-4e8a42968394",
+    "data": [
+      {
+        "text": "quiero que hables ",
+        "userDefined": false
+      },
+      {
+        "text": "a",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "mi",
+        "userDefined": false
+      },
+      {
+        "text": " responsable",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "es",
+    "updated": 0
+  },
+  {
+    "id": "17b16bb0-9fbc-4ed2-988d-ef2613a194c4",
+    "data": [
+      {
+        "text": "quiero que vengan por ",
+        "userDefined": false
+      },
+      {
+        "text": "mi",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "es",
+    "updated": 0
+  },
+  {
+    "id": "e4a37b55-7c3a-417a-a000-07e4768d9891",
+    "data": [
+      {
+        "text": "quiero que recojan",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "es",
+    "updated": 0
+  },
+  {
+    "id": "f993e243-b178-4645-ba4e-889d21e2af0b",
+    "data": [
+      {
+        "text": "mandar ubicacion",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "es",
+    "updated": 0
+  },
+  {
+    "id": "c53ea2fe-6cf9-4f4a-bca6-567f70d250ec",
+    "data": [
+      {
+        "text": "mandar ",
+        "userDefined": false
+      },
+      {
+        "text": "mi",
+        "userDefined": false
+      },
+      {
+        "text": " ubicacion",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "es",
+    "updated": 0
+  }
+]

@@ -1,10 +1,7 @@
 import 'dart:async';
 import 'dart:math';
-
-import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-
-
+import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
@@ -33,12 +30,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:geocoding/geocoding.dart';
 
-import 'package:dialogflow_flutter/dialogflowFlutter.dart';
-import 'package:dialogflow_flutter/googleAuth.dart';
-import 'package:dialogflow_flutter/language.dart';
-
-import 'package:googleapis/dialogflow/v2.dart';
-
+/*
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeService();
@@ -74,9 +66,6 @@ class _MyAppState extends State<MyApp> {
     initializeTts();
     //aumente para q no tengala necesidad de iniciar buton
     initSpeechState();
-    //dialog
-    initDialogflow();
-  //hasta aqui dialogflow
   }
 
   @override
@@ -130,7 +119,7 @@ class _MyAppState extends State<MyApp> {
   List<LocaleName> _localeNames = [];
   String temp = '';
   final SpeechToText speech = SpeechToText();
-  late DialogFlow dialogflow;
+
 
 
   
@@ -212,50 +201,6 @@ void speechSettings2(){
       _hasSpeech = hasSpeech;
     });
   }
-
-
-
-  //dialog flow 
-
-  Chatbot() {
-    initDialogflow();
-  }
-
-  Future<void> initDialogflow() async {
-  final authGoogle = await AuthGoogle(
-            fileJson: 'assets/agent.json')
-        .build();
-    dialogflow = DialogFlow(authGoogle: authGoogle, language: Language.spanish);
-  }
-
-  Future<void> detectIntent(String text) async {
-    try {
-      final response = await dialogflow.detectIntent(text);
-      final fulfillment = response.queryResult?.fulfillmentMessages?.first;
-      final speech = fulfillment?.simpleResponses?.simpleResponses?.first?.textToSpeech;
-
-      _speak(speech ?? "Lo siento, no entiendo lo que quieres decir.");
-    } catch (e) {
-      print("Ocurrió un error al procesar la solicitud: $e");
-      _speak("Lo siento, ha ocurrido un error al procesar tu solicitud.");
-    }
-  }
-
-  Future<void> queryDialogflow(String text) async {
-    try {
-      final response = await dialogflow.detectIntent(text);
-      final fulfillmentText = response.queryResult?.fulfillmentText;
-
-      // Reproducir la respuesta
-      print(fulfillmentText);
-      await _speak(fulfillmentText!);
-    } catch (e) {
-      print("Ocurrió un error al procesar la solicitud: $e");
-      _speak("Lo siento, ha ocurrido un error al procesar tu solicitud.");
-    }
-  }
-
-//hasta aqui
 @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -380,11 +325,8 @@ resultListener(SpeechRecognitionResult result) async {
       temp = lastWords.toLowerCase();
    
       print(temp);
-      
-       print('entre pelayo 2');
-        //con speed to text a text to speed
-      //comandos(temp);
-      queryDialogflow(temp);
+      comandos(temp);
+       print('entre pelayo');
     });
   }
   
@@ -658,8 +600,6 @@ resultListener(SpeechRecognitionResult result) async {
       lastStatus = '$status';
     });
   }
-  
-  FlatButton({required Text child, required onPressed}) {}
 }
 
 
@@ -855,4 +795,5 @@ class _LogViewState extends State<LogView> {
       },
     );
   }
-}
+} 
+*/

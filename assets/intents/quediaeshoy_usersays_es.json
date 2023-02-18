@@ -1,0 +1,78 @@
+[
+  {
+    "id": "3235bd51-8449-45e6-a6d7-334a1a79dc23",
+    "data": [
+      {
+        "text": "hoy",
+        "userDefined": false
+      },
+      {
+        "text": " que dia ",
+        "userDefined": false
+      },
+      {
+        "text": "es",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "es",
+    "updated": 0
+  },
+  {
+    "id": "5e4bacb0-2eab-410d-a0ba-5a0dd6600a3e",
+    "data": [
+      {
+        "text": "dia de hoy",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "es",
+    "updated": 0
+  },
+  {
+    "id": "3d3863a0-c551-4fb0-9d7f-2c04176a2626",
+    "data": [
+      {
+        "text": "que dia ",
+        "userDefined": false
+      },
+      {
+        "text": "es",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "es",
+    "updated": 0
+  },
+  {
+    "id": "40d46f65-e119-41d4-ab00-6854ae9bfd72",
+    "data": [
+      {
+        "text": "que dia ",
+        "userDefined": false
+      },
+      {
+        "text": "es",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "hoy",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "es",
+    "updated": 0
+  }
+]
