@@ -80,6 +80,8 @@ class _MyAppState extends State<MyApp> {
   String fechadehoy = '';
   String NumeroResponsable = '59170976802';
   String NombredeUsuario='Pelayo';
+  String midireccion = '';
+  String miciudad = '';
   final SpeechToText speech = SpeechToText();
   
 //asistente fin
@@ -248,6 +250,62 @@ queryDialogflow(String txt) async {
          NombredeUsuario =text + ' ' +NombredeUsuario;
          _speak(NombredeUsuario);
 	      break;
+        case 'estás en':
+          Position position = await Geolocator.getCurrentPosition(
+           desiredAccuracy: LocationAccuracy.high,
+          );
+
+          final double latitude = position.latitude;
+          final double longitude = position.longitude;
+
+            print('Latitude: $latitude, Longitude: $longitude');
+            List<Placemark> placemarks = await placemarkFromCoordinates(latitude, longitude);
+            Placemark placemark = placemarks[0];
+
+            String? street = placemark.street;
+            String? city = placemark.locality;
+            String? state = placemark.administrativeArea;
+            String? country = placemark.country;
+            String? postalCode = placemark.postalCode;
+            midireccion=text + ' ' +street!;
+            print(midireccion);
+         _speak(midireccion);
+	      break;
+        case 'te encuentras en la ciudad':
+          Position position = await Geolocator.getCurrentPosition(
+           desiredAccuracy: LocationAccuracy.high,
+          );
+
+          final double latitude = position.latitude;
+          final double longitude = position.longitude;
+
+            print('Latitude: $latitude, Longitude: $longitude');
+            List<Placemark> placemarks = await placemarkFromCoordinates(latitude, longitude);
+            Placemark placemark = placemarks[0];
+
+            String? street = placemark.street;
+            String? city = placemark.locality;
+            String? state = placemark.administrativeArea;
+            String? country = placemark.country;
+            String? postalCode = placemark.postalCode;
+            miciudad=text + ' ' +city!+ 'de'+country!;
+            print(miciudad);
+         _speak(miciudad);
+	      break;
+        case 'te la dedico esta música':
+        
+         _speak(text);
+	      break;
+        case 'cerrando música':
+        
+         _speak(text);
+	      break;
+
+        case 'pausando música':
+        
+         _speak(text);
+	      break;
+
         default:
            print('respuesta de dialogflow sin proceso');
            _speak(text);
@@ -282,6 +340,7 @@ hablar() async{
 resultListener(SpeechRecognitionResult result) async {
     ++resultListened;
     print('Result Listener $resultListened');
+    lastWords = '${result.recognizedWords}';
     setState(() {
       lastWords = '${result.recognizedWords}';
       temp = lastWords.toLowerCase();
