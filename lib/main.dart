@@ -36,7 +36,6 @@ import 'package:geocoding/geocoding.dart';
 import 'package:dialogflow_flutter/dialogflowFlutter.dart';
 import 'package:dialogflow_flutter/googleAuth.dart';
 import 'package:dialogflow_flutter/language.dart';
-
 import 'package:googleapis/dialogflow/v2.dart';
 
 Future<void> main() async {
@@ -63,6 +62,27 @@ class _MyAppState extends State<MyApp> {
   bool _isNear = false;
   late StreamSubscription<dynamic> _streamSubscription;
   late DialogFlow dialogflow;
+
+  //asistente
+   bool isPlaying = false;
+  late FlutterTts _flutterTts;
+  bool _hasSpeech = false;
+  double level = 0.0;
+  double minSoundLevel = 50000;
+  double maxSoundLevel = -50000; 
+  String lastWords = '';
+  String lastError = '';
+  String lastStatus = '';
+  String _currentLocaleId = 'es-ES';
+  int resultListened = 0;
+  List<LocaleName> _localeNames = [];
+  String temp = '';
+  String fechadehoy = '';
+  String NumeroResponsable = '59170976802';
+  String NombredeUsuario='Pelayo';
+  final SpeechToText speech = SpeechToText();
+  
+//asistente fin
   @override
   void initState() {
     super.initState();
@@ -107,33 +127,9 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
- 
-
 
 
 //de la assistente de voz
-
-
-  bool isPlaying = false;
-  late FlutterTts _flutterTts;
-  bool _hasSpeech = false;
-  double level = 0.0;
-  double minSoundLevel = 50000;
-  double maxSoundLevel = -50000; 
-  String lastWords = '';
-  String lastError = '';
-  String lastStatus = '';
-  String _currentLocaleId = 'es-ES';
-  int resultListened = 0;
-  List<LocaleName> _localeNames = [];
-  String temp = '';
-  final SpeechToText speech = SpeechToText();
-  
-
-
-  
-  
-
 
   initializeTts() {
     _flutterTts = FlutterTts();
@@ -223,74 +219,45 @@ queryDialogflow(String txt) async {
   AIResponse response = await dialogFlow.detectIntent(txt);
   String text = response.getMessage() ?? "No response";
   print("dialog: $text");
-  _speak(text);
+  //_speak(text);
   print(text);
+  
+      switch (text) {
+        case 'hoy es el día':
+         final DateTime now = DateTime.now();
+         final String formattedDate = DateFormat('dd/MM/yyyy HH:mm').format(now);
+         print(formattedDate); // imprime algo como "14/02/2023 15:30"
+         fechadehoy =text + ' ' +formattedDate;
+         _speak(fechadehoy);
+	      break; 
+
+        case 'mandando ubicación al responsable por whatsapp':
+          _speak(text);
+          Position position = await Geolocator.getCurrentPosition(
+           desiredAccuracy: LocationAccuracy.high,
+          );
+
+           final double latitude = position.latitude;
+           final double longitude = position.longitude;
+
+            print('Latitude: $latitude, Longitude: $longitude');
+          final url3 = "https://wa.me/$NumeroResponsable?text=Hola,%20¿Podes%20venir%20por%20mi?%0A%0AEste%20es%20el%20enlace%20de%20Google%20Maps:%20https://www.google.com/maps?q=$latitude,$longitude";
+          await launch(url3);
+        break;
+        case 'hola':
+         NombredeUsuario =text + ' ' +NombredeUsuario;
+         _speak(NombredeUsuario);
+	      break;
+        default:
+           print('respuesta de dialogflow sin proceso');
+           _speak(text);
+        break;
+
+
+      }
   }
 
-//hasta aqui
-@override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('APP DONDE ESTOY'),
-          backgroundColor: Color.fromARGB(255, 24, 109, 213)
-        ),
-        body: Column(children: [
-      
-          Expanded(
-            flex:4,
-            child: Column(
-              children: <Widget>[
-                Expanded(child: Stack(
-                  children: <Widget>[
-                    Container(
-                      color: Theme.of(context).selectedRowColor,
-                      child: Center(
-                        child: Text(
-                          lastWords,
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                    Positioned.fill(
-                      bottom: 10,
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Container(
-                          width: 40,
-                          height: 40,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                blurRadius: .26,
-                                spreadRadius: level * 1.5,
-                                color: Colors.black.withOpacity(.05))
-                             
-                            ],
-                            color: Colors.white,
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(50)),
-                          ),
-                          child: IconButton(
-                            icon: Icon(Icons.mic),
-                            onPressed: () => null,
-                          ),
-                        ),
-                      ),
-                      ),
-                  ],
-                ),
-                ),
-              ],
-              ),
-            ),
-        ]),
-     ),
-      );
-
-}
+//fin dialogflow
 
 startListening() async {
     lastWords = '';
@@ -382,7 +349,7 @@ resultListener(SpeechRecognitionResult result) async {
  
 	    break; 
 
-  case 'mandar mi ubicación ':
+      case 'mandar mi ubicación ':
         temp = 'Mandando la ubicación al responsable por whatsapp';
         _speak(temp);
      
@@ -398,7 +365,7 @@ resultListener(SpeechRecognitionResult result) async {
          await launch(url3);
       break;
 
-     case 'mandar mi ubicación':
+      case 'mandar mi ubicación':
         temp = 'Mandando la ubicación al responsable por whatsapp';
         _speak(temp);
        
@@ -420,14 +387,14 @@ resultListener(SpeechRecognitionResult result) async {
            final String numero ='59170976802';
          final String mensagem ='podes venir a recoger a Pelayo';
          Future<void> enviarMensagemWhatsApp(String numero, String mensagem) async {
-    final url = 'https://wa.me/$numero?text=${Uri.encodeFull(mensagem)}';
-  if (await canLaunch(url)) {
-    await launch(url);
-    print(url);
-  } else {
-    throw 'No fue posible abrir $url';
-  }
-}
+        final url = 'https://wa.me/$numero?text=${Uri.encodeFull(mensagem)}';
+        if (await canLaunch(url)) {
+         await launch(url);
+         print(url);
+        } else {
+           throw 'No fue posible abrir $url';
+         }
+        }
         //enviarMensagemWhatsApp('59170976802', 'Olá, podes venir a recoger a Pelayo');
         //final url2 = "https://wa.me/59170976802?text=Hola,%20¿cómo%20estás?";
         //await launch(url2);
@@ -441,11 +408,11 @@ resultListener(SpeechRecognitionResult result) async {
            final double longitude = position.longitude;
 
            print('Latitude: $latitude, Longitude: $longitude');
-        final url3 = "https://wa.me/59170976802?text=Hola,%20¿Podes%20venir%20por%20mi?%0A%0AEste%20es%20el%20enlace%20de%20Google%20Maps:%20https://www.google.com/maps?q=$latitude,$longitude";
-         await launch(url3);
+          final url3 = "https://wa.me/59170976802?text=Hola,%20¿Podes%20venir%20por%20mi?%0A%0AEste%20es%20el%20enlace%20de%20Google%20Maps:%20https://www.google.com/maps?q=$latitude,$longitude";
+          await launch(url3);
       break;
 
-     case 'mandar ubicación':
+      case 'mandar ubicación':
         temp = 'Mandando la ubicación al responsable por whatsapp';
         _speak(temp);
          final String numero ='59170976802';
@@ -598,7 +565,70 @@ resultListener(SpeechRecognitionResult result) async {
       lastStatus = '$status';
     });
   }
-  
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('APP DONDE ESTOY'),
+          backgroundColor: Color.fromARGB(255, 24, 109, 213)
+        ),
+        body: Column(children: [
+      
+          Expanded(
+            flex:4,
+            child: Column(
+              children: <Widget>[
+                Expanded(child: Stack(
+                  children: <Widget>[
+                    Container(
+                      color: Theme.of(context).selectedRowColor,
+                      child: Center(
+                        child: Text(
+                          lastWords,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    Positioned.fill(
+                      bottom: 10,
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                blurRadius: .26,
+                                spreadRadius: level * 1.5,
+                                color: Colors.black.withOpacity(.05))
+                             
+                            ],
+                            color: Colors.white,
+                            borderRadius:
+                            BorderRadius.all(Radius.circular(50)),
+                          ),
+                          child: IconButton(
+                            icon: Icon(Icons.mic),
+                            onPressed: () => null,
+                          ),
+                        ),
+                      ),
+                      ),
+                  ],
+                ),
+                ),
+              ],
+              ),
+            ),
+        ]),
+     ),
+      );
+
+}
+
   
   FlatButton({Text? child, VoidCallback? onPressed}) {}
 
@@ -749,10 +779,6 @@ void onStart(ServiceInstance service) async {
 mixin DartPluginRegistrant {
   static void ensureInitialized() {}
 }
-
-
-
-
 
 class LogView extends StatefulWidget {
   const LogView({Key? key}) : super(key: key);
