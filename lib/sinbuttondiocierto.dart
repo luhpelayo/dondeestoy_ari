@@ -62,7 +62,7 @@ class _MyAppState extends State<MyApp> {
   
   bool _isNear = false;
   late StreamSubscription<dynamic> _streamSubscription;
-  late DialogFlow dialogflow;
+
   @override
   void initState() {
     super.initState();
@@ -75,7 +75,7 @@ class _MyAppState extends State<MyApp> {
     //aumente para q no tengala necesidad de iniciar buton
     initSpeechState();
     //dialog
-    //initDialogflow();
+    initDialogflow();
   //hasta aqui dialogflow
   }
 
@@ -100,7 +100,9 @@ class _MyAppState extends State<MyApp> {
           //_speak("Hola, ¿cómo estás?");
             
             hablar();
-             
+          
+            
+          
         }
        
       });
@@ -128,7 +130,7 @@ class _MyAppState extends State<MyApp> {
   List<LocaleName> _localeNames = [];
   String temp = '';
   final SpeechToText speech = SpeechToText();
-  
+  late DialogFlow dialogflow;
 
 
   
@@ -215,16 +217,42 @@ void speechSettings2(){
 
   //dialog flow 
 
-queryDialogflow(String txt) async {
-    AuthGoogle authGoogle =
-      await AuthGoogle(fileJson: "assets/pelayo-telp-560d34c0210c.json")
-          .build();
-  DialogFlow dialogFlow = DialogFlow(authGoogle: authGoogle);
-  AIResponse response = await dialogFlow.detectIntent(txt);
-  String text = response.getMessage() ?? "No response";
-  print("dialog: $text");
-  _speak(text);
-  print(text);
+  Chatbot() {
+    initDialogflow();
+  }
+
+  Future<void> initDialogflow() async {
+  final authGoogle = await AuthGoogle(
+            fileJson: 'assets/agent.json')
+        .build();
+    dialogflow = DialogFlow(authGoogle: authGoogle, language: Language.spanish);
+  }
+
+  Future<void> detectIntent(String text) async {
+    try {
+      final response = await dialogflow.detectIntent(text);
+      final fulfillment = response.queryResult?.fulfillmentMessages?.first;
+      final speech = fulfillment?.simpleResponses?.simpleResponses?.first?.textToSpeech;
+
+      _speak(speech ?? "Lo siento, no entiendo lo que quieres decir.");
+    } catch (e) {
+      print("Ocurrió un error al procesar la solicitud: $e");
+      _speak("Lo siento, ha ocurrido un error al procesar tu solicitud.");
+    }
+  }
+
+  Future<void> queryDialogflow(String text) async {
+    try {
+      final response = await dialogflow.detectIntent(text);
+      final fulfillmentText = response.queryResult?.fulfillmentText;
+
+      // Reproducir la respuesta
+      print(fulfillmentText);
+      await _speak(fulfillmentText!);
+    } catch (e) {
+      print("Ocurrió un error al procesar la solicitud: $e");
+      _speak("Lo siento, ha ocurrido un error al procesar tu solicitud.");
+    }
   }
 
 //hasta aqui

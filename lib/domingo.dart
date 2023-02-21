@@ -66,6 +66,8 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+
+   
     listenSensor();
     
     _speak("Bienvenido a la aplicación");
@@ -75,7 +77,9 @@ class _MyAppState extends State<MyApp> {
     //aumente para q no tengala necesidad de iniciar buton
     initSpeechState();
     //dialog
-    //initDialogflow();
+    
+      initDialogflow();
+      print('inicio dialogflow');
   //hasta aqui dialogflow
   }
 
@@ -100,7 +104,9 @@ class _MyAppState extends State<MyApp> {
           //_speak("Hola, ¿cómo estás?");
             
             hablar();
-             
+          
+            
+          
         }
        
       });
@@ -127,6 +133,7 @@ class _MyAppState extends State<MyApp> {
   int resultListened = 0;
   List<LocaleName> _localeNames = [];
   String temp = '';
+  String RespuestaDialogflow ='';
   final SpeechToText speech = SpeechToText();
   
 
@@ -215,18 +222,44 @@ void speechSettings2(){
 
   //dialog flow 
 
-queryDialogflow(String txt) async {
-    AuthGoogle authGoogle =
-      await AuthGoogle(fileJson: "assets/pelayo-telp-560d34c0210c.json")
-          .build();
-  DialogFlow dialogFlow = DialogFlow(authGoogle: authGoogle);
-  AIResponse response = await dialogFlow.detectIntent(txt);
-  String text = response.getMessage() ?? "No response";
-  print("dialog: $text");
-  _speak(text);
-  print(text);
+
+  /*  Future<void> initDialogflow() async {
+  final authGoogle = await AuthGoogle(
+            fileJson: 'assets/agent.json')
+        .build();
+    dialogflow = DialogFlow(authGoogle: authGoogle, language: Language.spanish);
   }
 
+ 
+queryDialogflow(String text) async {
+final authGoogle = await AuthGoogle(
+            fileJson: 'assets/agent.json')
+        .build();
+    dialogflow = DialogFlow(authGoogle: authGoogle, language: Language.spanish);
+ 
+final response = await dialogflow.detectIntent(text);
+final fulfillmentText = response.queryResult?.fulfillmentText;
+
+      // Reproducir la respuesta
+print(fulfillmentText);
+_speak(fulfillmentText!);
+  
+  }
+  */
+
+    Future<void> initDialogflow() async {
+    final authGoogle = await AuthGoogle(fileJson: 'assets/agent.json').build();
+    dialogflow = DialogFlow(authGoogle: authGoogle, language: Language.spanish);
+  }
+
+  Future<void> queryDialogflow(String text) async {
+    final response = await dialogflow.detectIntent(text);
+    final fulfillmentText = response.queryResult?.fulfillmentText;
+
+    // Reproducir la respuesta
+    print(fulfillmentText);
+    _speak(fulfillmentText!);
+  }
 //hasta aqui
 @override
   Widget build(BuildContext context) {
@@ -323,11 +356,15 @@ resultListener(SpeechRecognitionResult result) async {
       
        print('entre pelayo 2');
         //con speed to text a text to speed
-      //comandos(temp);
-      queryDialogflow(temp);
+    //comandos(temp);
+      //queryDialogflow(temp);
+    queryDialogflow(temp);
+    print('respuesta de dialogoflow');
+
     });
   }
-  
+
+
 
 
   comandos(String txt) async {

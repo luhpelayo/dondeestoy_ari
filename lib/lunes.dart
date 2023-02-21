@@ -49,6 +49,8 @@ Future<void> main() async {
 //la parte sensor
 FlutterTts flutterTts = FlutterTts();
 
+//asistente de voz
+FlutterTts _flutterTts = FlutterTts();
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -60,12 +62,34 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
 
   
+//de la assistente de voz
+
+
+  bool isPlaying = false;
+  late FlutterTts _flutterTts;
+  bool _hasSpeech = false;
+  double level = 0.0;
+  double minSoundLevel = 50000;
+  double maxSoundLevel = -50000; 
+  String lastWords = '';
+  String lastError = '';
+  String lastStatus = '';
+  String _currentLocaleId = 'es-ES';
+  int resultListened = 0;
+  List<LocaleName> _localeNames = [];
+  String temp = '';
+  String RespuestaDialogflow ='';
+  final SpeechToText speech = SpeechToText();
+  //asistente de voz
   bool _isNear = false;
   late StreamSubscription<dynamic> _streamSubscription;
   late DialogFlow dialogflow;
+
   @override
   void initState() {
     super.initState();
+
+   
     listenSensor();
     
     _speak("Bienvenido a la aplicación");
@@ -75,7 +99,9 @@ class _MyAppState extends State<MyApp> {
     //aumente para q no tengala necesidad de iniciar buton
     initSpeechState();
     //dialog
-    //initDialogflow();
+    
+      initDialogflow();
+      print('inicio dialogflow');
   //hasta aqui dialogflow
   }
 
@@ -100,48 +126,15 @@ class _MyAppState extends State<MyApp> {
           //_speak("Hola, ¿cómo estás?");
             
             hablar();
-             
-        }
-       
+                    
+        } 
       });
     });
   }
 
- 
-
-
-
-//de la assistente de voz
-
-
-  bool isPlaying = false;
-  late FlutterTts _flutterTts;
-  bool _hasSpeech = false;
-  double level = 0.0;
-  double minSoundLevel = 50000;
-  double maxSoundLevel = -50000; 
-  String lastWords = '';
-  String lastError = '';
-  String lastStatus = '';
-  String _currentLocaleId = 'es-ES';
-  int resultListened = 0;
-  List<LocaleName> _localeNames = [];
-  String temp = '';
-  final SpeechToText speech = SpeechToText();
-  
-
-
-  
-  
-
-
-  initializeTts() {
+   initializeTts() {
     _flutterTts = FlutterTts();
-
-   setTtsLanguage();
-
- 
-
+    setTtsLanguage();
     _flutterTts.setStartHandler(() {
       setState(() {
         isPlaying = true;
@@ -215,81 +208,50 @@ void speechSettings2(){
 
   //dialog flow 
 
-queryDialogflow(String txt) async {
-    AuthGoogle authGoogle =
-      await AuthGoogle(fileJson: "assets/pelayo-telp-560d34c0210c.json")
-          .build();
-  DialogFlow dialogFlow = DialogFlow(authGoogle: authGoogle);
-  AIResponse response = await dialogFlow.detectIntent(txt);
-  String text = response.getMessage() ?? "No response";
-  print("dialog: $text");
-  _speak(text);
-  print(text);
+
+  /*  Future<void> initDialogflow() async {
+  final authGoogle = await AuthGoogle(
+            fileJson: 'assets/agent.json')
+        .build();
+    dialogflow = DialogFlow(authGoogle: authGoogle, language: Language.spanish);
   }
 
-//hasta aqui
-@override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('APP DONDE ESTOY'),
-          backgroundColor: Color.fromARGB(255, 24, 109, 213)
-        ),
-        body: Column(children: [
-      
-          Expanded(
-            flex:4,
-            child: Column(
-              children: <Widget>[
-                Expanded(child: Stack(
-                  children: <Widget>[
-                    Container(
-                      color: Theme.of(context).selectedRowColor,
-                      child: Center(
-                        child: Text(
-                          lastWords,
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                    Positioned.fill(
-                      bottom: 10,
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Container(
-                          width: 40,
-                          height: 40,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                blurRadius: .26,
-                                spreadRadius: level * 1.5,
-                                color: Colors.black.withOpacity(.05))
-                             
-                            ],
-                            color: Colors.white,
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(50)),
-                          ),
-                          child: IconButton(
-                            icon: Icon(Icons.mic),
-                            onPressed: () => null,
-                          ),
-                        ),
-                      ),
-                      ),
-                  ],
-                ),
-                ),
-              ],
-              ),
-            ),
-        ]),
-     ),
-      );
+ 
+queryDialogflow(String text) async {
+final authGoogle = await AuthGoogle(
+            fileJson: 'assets/agent.json')
+        .build();
+    dialogflow = DialogFlow(authGoogle: authGoogle, language: Language.spanish);
+ 
+final response = await dialogflow.detectIntent(text);
+final fulfillmentText = response.queryResult?.fulfillmentText;
 
+      // Reproducir la respuesta
+print(fulfillmentText);
+_speak(fulfillmentText!);
+  
+  }
+  */
+
+    Future<void> initDialogflow() async {
+    final authGoogle = await AuthGoogle(fileJson: 'assets/pelayo-telp-9fd3686424f3.json').build();
+    dialogflow = DialogFlow(authGoogle: authGoogle, language: Language.spanish);
+  }
+
+  Future<void> queryDialogflow(String text) async {
+    final response = await dialogflow.detectIntent(text);
+    final fulfillmentText = response.queryResult?.fulfillmentText;
+
+    // Reproducir la respuesta
+    print(fulfillmentText);
+    _speak(fulfillmentText!);
+  }
+//hasta aqui
+
+
+//asistente de voz
+hablar() async{
+  await startListening();
 }
 
 startListening() async {
@@ -308,10 +270,6 @@ startListening() async {
     print('entre pelayo');
   }
 
-hablar() async{
-  await startListening();
-}
-
 resultListener(SpeechRecognitionResult result) async {
     ++resultListened;
     print('Result Listener $resultListened');
@@ -323,12 +281,13 @@ resultListener(SpeechRecognitionResult result) async {
       
        print('entre pelayo 2');
         //con speed to text a text to speed
-      //comandos(temp);
-      queryDialogflow(temp);
+    //comandos(temp);
+      //queryDialogflow(temp);
+    queryDialogflow(temp);
+    print('respuesta de dialogoflow');
+
     });
   }
-  
-
 
   comandos(String txt) async {
     switch (txt) {
@@ -598,7 +557,71 @@ resultListener(SpeechRecognitionResult result) async {
       lastStatus = '$status';
     });
   }
-  
+
+  //interfaz principal
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('APP DONDE ESTOY'),
+          backgroundColor: Color.fromARGB(255, 24, 109, 213)
+        ),
+        body: Column(children: [
+      
+          Expanded(
+            flex:4,
+            child: Column(
+              children: <Widget>[
+                Expanded(child: Stack(
+                  children: <Widget>[
+                    Container(
+                      color: Theme.of(context).selectedRowColor,
+                      child: Center(
+                        child: Text(
+                          lastWords,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    Positioned.fill(
+                      bottom: 10,
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                blurRadius: .26,
+                                spreadRadius: level * 1.5,
+                                color: Colors.black.withOpacity(.05))
+                             
+                            ],
+                            color: Colors.white,
+                            borderRadius:
+                            BorderRadius.all(Radius.circular(50)),
+                          ),
+                          child: IconButton(
+                            icon: Icon(Icons.mic),
+                            onPressed: () => null,
+                          ),
+                        ),
+                      ),
+                      ),
+                  ],
+                ),
+                ),
+              ],
+              ),
+            ),
+        ]),
+     ),
+      );
+
+}
   
   FlatButton({Text? child, VoidCallback? onPressed}) {}
 

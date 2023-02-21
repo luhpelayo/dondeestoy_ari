@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "pelayo-telp",
+  "private_key_id": "560d34c0210c586f753fb61d44e7499957aba59c",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC6XLh47bs8cdVj\nkoUJPTatgo07jmx8VXgq+0e2uHjHEyb4KSfqhEBJl5RlUBKIYyvOw6SmpWd7qmFc\nK/7C9QMVGuPeUEUvFeJ4I7H+mUW18oQd36ey8qsPjt5xjP8q73sBoSaiX5AiNpk1\nVrFdyjU3rabvffXfUypVHA3Q/RJQyguSt6h1DLcp+d4PRPD40EroQD6B7Oawd8Cr\nal+WIeUS8JiCnuVQQ1Dx7/a+5RwvX4n98h4lQj7ity+tBNvBtpAi4A2TRCjDz8Li\nB8q+np4IJ4ARqRFPLFX70q53e38GloAXORPzGQH0Pr/O6nEUUegNDUIj+zosWG4W\n/PzQzz6lAgMBAAECggEACPIlL2lKcC3O6Azf9eNT6FmiIdsZBV5NJ2A9rBcBwmnY\nMhhRqieHXLEAZqoEr1QPxbws/3Kxrr7gfESNYgdRl4LQsCEkzQxgVtMjbhAMx8QY\nocSucv/eN8ZsX0GJyMixqPcDv06JWsCwGcTrvM+VceYg8EUMF2VEqZmJs6ZH6b8c\n5+4SYI8TwUgFraoPxnA0plei4FUL9Nzj73sEaIf67P4ncaWtHXbmKowOFsxzw/au\nQgmyYn1pOkE7MwpAuFJFcRCcif011IRK/MDVI2G++7VgtNGdilWyx5zc73MMxBBk\nNN0sUKYYgmUEIUB2yDYnSxK8kyr+DG85jm4jhasTsQKBgQDu4V0f+Dk+UPYCTsdp\nX1MuvqmqUfLJSDLc0AqPuHvxpIvC6cze5UqNVsi+67xzoYUgqthk5xXpHyS3BsUT\naVJDDpz1LZZf+2+WBTOelhLD529tVtWSTLsGpr8jc4uS3ReFHrvaTMgu/n7V/ofm\n0iEA0mFOFpn7b6+k4aMIctktlQKBgQDHt9QrzscmnTLUvhtdTRZ5Lohn7i8TBOH1\njd5ypLMCzQ3rXEay40Ig+bZxO/Yya+h6tGZIbjJY4A+F7ZDILCQdrPLleRYyyXsC\nFZkbh0FYKQOnDi0fCExlsnuMQmfPbXnEQx2Cm7Uqj3OlroicyAhpMbnowdKALiA/\nnbCryuro0QKBgAS2g4zW6+Iz3Las8Tg9/jkk39oRZdXcy8wZeqvdOuzIj01YKYeY\nRIFHXgyOQBiT7jl3xW8wM/l2eNX3lznL0SiriCM6NAZOwqPWFG+jjFk7HrKsjOgn\nBWWbMpgzdmR+YjFpKtGixCxRLxVvwSSnrqkCfZL51S3lxTRek0XeZjSFAoGAYB8T\nmLn+k5EZA9czaGZPqKdCs3KpaWfyMLLFGzw1g+WZC2vwAuzpyOEmc70+MupIi7YD\nfFy9EpVUI0tBYXYNM9MnXFY43tylvU0T0XH5eyrSPTbPdJ4T1uZeHBVhzS2Na245\n58B1IzTDnjwwN/T2R1rNdT7Dxzlr//IvM5+IC+ECgYEArFUiB9uGPYg25l/gMWcY\n4ohICFc7WY+89dsESkcGjEaJGMW7cjMjDrDag1EEZ3pIJQ4PeHsJ00l4z/W+8gj1\ncDEhoeu84FF/pnVXf3POZSI/XmW0xIVUAjrw2/1dwwNSl0H3ZpLsny6VJEImZecU\nz5corYoTK3e95K4svzURV68=\n-----END PRIVATE KEY-----\n",
+  "client_email": "dialogflowpl@pelayo-telp.iam.gserviceaccount.com",
+  "client_id": "102787809257414870115",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/dialogflowpl%40pelayo-telp.iam.gserviceaccount.com"
+}
