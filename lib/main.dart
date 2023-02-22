@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:just_audio/just_audio.dart';
 
 
 import 'package:speech_to_text/speech_recognition_error.dart';
@@ -37,6 +38,8 @@ import 'package:dialogflow_flutter/dialogflowFlutter.dart';
 import 'package:dialogflow_flutter/googleAuth.dart';
 import 'package:dialogflow_flutter/language.dart';
 import 'package:googleapis/dialogflow/v2.dart';
+//import 'package:audioplayers/audioplayers.dart';
+import 'package:just_audio/just_audio.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -83,8 +86,11 @@ class _MyAppState extends State<MyApp> {
   String midireccion = '';
   String miciudad = '';
   final SpeechToText speech = SpeechToText();
-  
-//asistente fin
+  //asistente fin
+  //AudioPlayer audioPlayer = AudioPlayer();
+  final player = AudioPlayer();
+  String musicUrl = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
+
   @override
   void initState() {
     super.initState();
@@ -209,7 +215,30 @@ void speechSettings2(){
     });
   }
 
+//musica
+ //String musicUrl = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
 
+ Future<void> playMusicFromUrl(String musicUrl) async {
+  await player.setUrl(musicUrl);
+  await player.play();
+  print('Música tocando');
+}
+Future<void> pauseMusic() async {
+  await player.pause();
+  print('Música en pausa');
+}
+
+Future<void> stopMusic() async {
+  await player.stop();
+  print('Música detenida');
+}
+
+Future<void> resumeMusic() async {
+  await player.play();
+  print('Música reanudada');
+}
+
+//fin de musica
 
   //dialog flow 
 
@@ -292,18 +321,36 @@ queryDialogflow(String txt) async {
             print(miciudad);
          _speak(miciudad);
 	      break;
+
+        case 'la calle más cercana es':
+
+         _speak(text);
+	      break;
         case 'te la dedico esta música':
         
-         _speak(text);
+        //await audioPlayer.play(musicUrl as Source);
+        //print('Música tocando');
+        _speak(text);
+
+         playMusicFromUrl('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3');
+        //playMusicFromUrl('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3');
+        print('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3');
 	      break;
         case 'cerrando música':
         
          _speak(text);
+        stopMusic();
 	      break;
 
         case 'pausando música':
         
          _speak(text);
+         pauseMusic();
+	      break;
+        case 'retomando música':
+        
+         _speak(text);
+         resumeMusic();
 	      break;
 
         default:
