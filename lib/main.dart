@@ -85,6 +85,7 @@ class _MyAppState extends State<MyApp> {
   String NombredeUsuario='Pelayo';
   String midireccion = '';
   String miciudad = '';
+  String callecercana = '';
   final SpeechToText speech = SpeechToText();
   //asistente fin
   //AudioPlayer audioPlayer = AudioPlayer();
@@ -127,7 +128,7 @@ class _MyAppState extends State<MyApp> {
         if (_isNear) {
           //_speak("Hola, ¿cómo estás?");
             
-            hablar();
+            hablando_con_asistente();
              
         }
        
@@ -240,6 +241,31 @@ Future<void> resumeMusic() async {
 
 //fin de musica
 
+//ubicacion  mas cercana
+
+Future<String> getCalleCercana() async {
+  final position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high);
+      
+  final lat = position.latitude;
+  final lng = position.longitude;
+
+  final apiKey = 'AIzaSyBMEmnnaq_Q2e95a6sKm5U97LHEddaTYVY';
+  final url =
+      'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=$apiKey';
+  final response = await http.get(Uri.parse(url));
+
+  final decoded = json.decode(response.body);
+  final results = decoded['results'] as List<dynamic>;
+
+  final calles = results
+      .map((result) => result['formatted_address'] as String)
+      .toList();
+
+  return calles.join(', '); // unir todas las calles separadas por una coma
+}
+
+//fin de ubicacion mas cercana
   //dialog flow 
 
 queryDialogflow(String txt) async {
@@ -323,8 +349,10 @@ queryDialogflow(String txt) async {
 	      break;
 
         case 'la calle más cercana es':
+          callecercana = await getCalleCercana();
+          String mensaje = text + ' ' + callecercana;
+        _speak(mensaje);
 
-         _speak(text);
 	      break;
         case 'te la dedico esta música':
         
@@ -380,7 +408,7 @@ startListening() async {
     print('entre pelayo');
   }
 
-hablar() async{
+hablando_con_asistente() async{
   await startListening();
 }
 
@@ -674,6 +702,7 @@ resultListener(SpeechRecognitionResult result) async {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
           title: const Text('APP DONDE ESTOY'),
