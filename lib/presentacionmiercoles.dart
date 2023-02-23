@@ -92,7 +92,6 @@ class _MyAppState extends State<MyApp> {
   final player = AudioPlayer();
   String musicUrl = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
 
-  String llamarResponsable='+59161368450';
   @override
   void initState() {
     super.initState();
@@ -267,21 +266,6 @@ Future<String> getCalleCercana() async {
 }
 
 //fin de ubicacion mas cercana
-
-//llamada al rsponsable
-
-//String llamarResponsable='+59161368450';
-void _makePhoneCall(String phoneNumber) async {
-  String telScheme = 'tel:$phoneNumber';
-  if (await canLaunch(telScheme)) {
-    print('llamando a pelayo');
-    await launch(telScheme);
-  } else {
-    throw 'No se pudo hacer la llamada a $phoneNumber';
-  }
-}
-//_makePhoneCall(llamarResponsable);
-//fin de llamada
   //dialog flow 
 
 queryDialogflow(String txt) async {
@@ -395,11 +379,6 @@ queryDialogflow(String txt) async {
         
          _speak(text);
          resumeMusic();
-	      break;
-        case 'llamando al responsable':
-        
-         _speak(text);
-         _makePhoneCall(llamarResponsable);
 	      break;
 
         default:
@@ -796,44 +775,6 @@ resultListener(SpeechRecognitionResult result) async {
 Future<void> initializeService() async {
   final service = FlutterBackgroundService();
   
-//todo el asistente virtual
-  FlutterTts flutterTts = FlutterTts();
-  bool _isNear = false;
-  late StreamSubscription<dynamic> _streamSubscription;
-  late DialogFlow dialogflow;
-
-  //asistente
-  bool isPlaying = false;
-  late FlutterTts _flutterTts;
-  bool _hasSpeech = false;
-  double level = 0.0;
-  double minSoundLevel = 50000;
-  double maxSoundLevel = -50000; 
-  String lastWords = '';
-  String lastError = '';
-  String lastStatus = '';
-  String _currentLocaleId = 'es-ES';
-  int resultListened = 0;
-  List<LocaleName> _localeNames = [];
-  String temp = '';
-  String fechadehoy = '';
-  String NumeroResponsable = '59170976802';
-  String NombredeUsuario='Pelayo';
-  String midireccion = '';
-  String miciudad = '';
-  String callecercana = '';
-  final SpeechToText speech = SpeechToText();
-  //asistente fin
-  //AudioPlayer audioPlayer = AudioPlayer();
-  final player = AudioPlayer();
-  String musicUrl = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
-
-
-_MyAppState().initState();
-
- 
-//fin del asistente virtual
-
   /// OPTIONAL, using custom notification channel id
   const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'my_foreground', // id
